@@ -2,6 +2,16 @@ const passport = require('passport');
 const User = require('../model/User');
 const FacebookStrategy = require('passport-facebook').Strategy;
 
+passport.serializeUser((user, done) => done(null, user.fbId));
+passport.deserializeUser((userID, done) => {
+    User.findOne({fbId: userID}).then(user => {
+        return done(null, user);
+    })
+    .catch(err => {
+        return done(err, false);
+    })
+})
+
 // Later Can merge both email and fb Id if have either of one already.
 module.exports = new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
@@ -27,14 +37,4 @@ module.exports = new FacebookStrategy({
                 .catch(err => {return cb(err, false)});
         })
         .catch(err => {return cb(err, false)})
-})
-
-passport.serializeUser((user, done) => done(null, user.fbId));
-passport.deserializeUser((userID, done) => {
-    User.findOne({fbId: userID}).then(user => {
-        return done(null, user);
-    })
-    .catch(err => {
-        return done(err, false);
-    })
-})
+});

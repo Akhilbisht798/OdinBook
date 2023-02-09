@@ -4,22 +4,11 @@ const User = require('../model/User');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 
-const LocalStrategy = require('../config/passport-local');
-const FacebookStrategy = require('../config/passport-facebook');
 
-passport.use(LocalStrategy);
-passport.use(FacebookStrategy);
-
-// Tempory for checking Purpose only.
-
-const isAuthenticated = (req, res, next) => {
-  if (req.user) {
-    next();
-  }
-  res.send({message: "No Permission"});
-}
-
-/* GET home page. */
+/**
+ * Create New User.
+ * Email, Password - Authenticate
+ */
 router.post('/', async (req, res, next) => {
   const email = req.body.email;
   const hashedPass = await bcrypt.hash(req.body.password, 5);
@@ -31,9 +20,18 @@ router.post('/', async (req, res, next) => {
   .catch(err => res.json(err));
 });
 
-router.post('/login', passport.authenticate("local"));
+router.get('/', passport.authenticate('local'), (req, res) => {
+  res.send("This is a passport");
+});
 
-router.get('/auth/facebook', passport.authenticate("facebook"));
+
+/**
+ * Authenticate Using Facebook
+ * Still Broken Need to fix this.
+ */
+router.get('/auth/facebook', passport.authenticate("facebook"), (req, res) => {
+  res.send(req.user);
+});
 
 router.get('/auth/facebook/callback', 
   passport.authenticate("facebook", {failureMessage:"Failed to authenticate with fb"}),
@@ -41,10 +39,9 @@ router.get('/auth/facebook/callback',
     res.json({user: req.user})
 })
 
-router.get("/r", isAuthenticated, (req, res, next) => {
-  res.send({
-    data: "THis is imp data",
-  })
+// Checking for authentication
+router.get('/res', (req, res) => {
+  res.send("Failed Login");
 })
 
 module.exports = router;

@@ -13,7 +13,11 @@ dotenv.config();
 
 require('./config/mongoConfig'); // MongoDb connection.
 
-var indexRouter = require('./routes/index');
+// Passport Strategy
+require('./config/passport-local');
+
+var userRouter = require('./routes/auth');
+var requestRouter = require('./routes/Friend/Request');
 
 var app = express();
 
@@ -32,7 +36,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', indexRouter);
+//Routes.
+app.use('/', userRouter);
+app.use('/req', requestRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -47,7 +53,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.send('error');
+  res.json(err);
 });
 
 app.listen(process.env.PORT, () => {
