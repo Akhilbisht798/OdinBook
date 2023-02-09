@@ -3,6 +3,7 @@ const User = require('../model/User');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 
+// Maybe use FindOrCreate so you save on routes.
 const authUser = async (email, password, done) => {
     User.findOne({email: email})
         .then((user) => {

@@ -7,6 +7,8 @@ const User = new  Schema({
     friend: [{type: Schema.Types.ObjectId}],
     Request: [{type: Schema.Types.ObjectId}],
     email: {type: String, unique: true},
+    fbId: {type: String},
+    profilePic: {type: String},
 });
 
 module.exports = mongoose.model("Users", User);

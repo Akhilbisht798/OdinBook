@@ -5,8 +5,12 @@ const passport = require('passport');
 const bcrypt = require('bcrypt');
 
 const LocalStrategy = require('../config/passport-local');
+const FacebookStrategy = require('../config/passport-facebook');
 
 passport.use(LocalStrategy);
+passport.use(FacebookStrategy);
+
+// Tempory for checking Purpose only.
 
 const isAuthenticated = (req, res, next) => {
   if (req.user) {
@@ -28,6 +32,14 @@ router.post('/', async (req, res, next) => {
 });
 
 router.post('/login', passport.authenticate("local"));
+
+router.get('/auth/facebook', passport.authenticate("facebook"));
+
+router.get('/auth/facebook/callback', 
+  passport.authenticate("facebook", {failureMessage:"Failed to authenticate with fb"}),
+  (req, res) => {
+    res.json({user: req.user})
+})
 
 router.get("/r", isAuthenticated, (req, res, next) => {
   res.send({

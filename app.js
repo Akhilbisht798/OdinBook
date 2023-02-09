@@ -7,6 +7,7 @@ var dotenv = require('dotenv');
 const passport = require('passport');
 const session = require('express-session');
 const flash = require('express-flash');
+const cors = require('cors');
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
