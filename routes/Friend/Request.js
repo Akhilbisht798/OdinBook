@@ -1,7 +1,8 @@
 const express = require('express');
-const passport = require('passport');
+const async = require('async');
 const UserModel = require('../../model/User'); 
 const PostModel = require('../../model/Post');
+
 
 const router = express.Router();
 
@@ -29,16 +30,71 @@ router.get('/', (req, res, next) => {
 
 // Send Request to User.
 router.post('/:id', (req, res, next) => {
+    if (req.user.friend.includes(req.params.id)) {
+        res.json({
+            message: "You are already friends",
+        })
+    } else {
+        UserModel.updateOne(
+            {_id: req.params.id},
+            { $push: { Request: req.user._id } }
+        )
+        .then((data) => {
+            res.json(data); 
+        })
+        .catch(err => {
+            res.json({error: err});
+        })
+    }
+})
+
+// Accept a request.
+router.put("/accept/:id", (req, res, next) => {
+    if (!req.user.Request.includes(id)) {
+        res.json({
+            message: "Not Friend Request found",
+        })
+    }
+    UserModel.updateOne(
+        {_id: req.user._id}, 
+        { 
+            $push: {friend: req.params.id},
+            $pull: {Request: req.params.id}
+        }
+    )
+    .then(data => {
+        console.log(data);
+    })
+    .catch(err => {
+        res.json({error: err});
+    })
     UserModel.updateOne(
         {_id: req.params.id},
-        { $push: { Request: req.user._id } }
+        {
+            $push : {friend: req.user._id},
+        }
     )
-    .then((data) => {
-        res.json(data); 
+    .then(data => {
+        res.json(data);
     })
     .catch(err => {
         res.json({error: err});
     })
 })
+
+// delete a request.
+router.put('delete/:id', (req, res, next) => {
+    UserModel.updateOne(
+        {_id: req.user.id},
+        { $pull: {Request: req.user.id}}
+    )
+    .then(data => {
+        res.json(data);
+    })
+    .catch(err => {
+        res.json(err);
+    })
+})
+
 
 module.exports = router;

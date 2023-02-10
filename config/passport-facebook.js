@@ -13,7 +13,7 @@ passport.deserializeUser((userID, done) => {
 })
 
 // Later Can merge both email and fb Id if have either of one already.
-module.exports = new FacebookStrategy({
+passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
     callbackURL: "http://localhost:3000/auth/facebook/callback",
@@ -37,4 +37,4 @@ module.exports = new FacebookStrategy({
                 .catch(err => {return cb(err, false)});
         })
         .catch(err => {return cb(err, false)})
-});
+}));

@@ -11,10 +11,12 @@ const cors = require('cors');
 
 dotenv.config();
 
-require('./config/mongoConfig'); // MongoDb connection.
+// MongoDb connection.
+require('./config/mongoConfig');
 
 // Passport Strategy
 require('./config/passport-local');
+require('./config/passport-facebook');
 
 var userRouter = require('./routes/auth');
 var requestRouter = require('./routes/Friend/Request');
@@ -38,7 +40,7 @@ app.use(passport.session());
 
 //Routes.
 app.use('/', userRouter);
-app.use('/req', requestRouter);
+app.use('/Request', requestRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
