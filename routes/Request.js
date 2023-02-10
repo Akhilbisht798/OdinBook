@@ -1,19 +1,8 @@
 const express = require('express');
-const async = require('async');
-const UserModel = require('../../model/User'); 
-const PostModel = require('../../model/Post');
-
+const UserModel = require('../model/User'); 
+const { isAuthenticated } = require('../utils/AuthFunction')
 
 const router = express.Router();
-
-const isAuthenticated = (req, res, next) => {
-    if (req.user) {
-      next();
-    } else {
-        res.send({message: "Authenticate First For Access"});
-    }
-}
-
 router.use(isAuthenticated);
 
 // Get All User Friend Request.

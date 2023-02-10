@@ -19,7 +19,8 @@ require('./config/passport-local');
 require('./config/passport-facebook');
 
 var userRouter = require('./routes/auth');
-var requestRouter = require('./routes/Friend/Request');
+var requestRouter = require('./routes/Request');
+var postRouter = require('./routes/postRoute');
 
 var app = express();
 
@@ -41,6 +42,7 @@ app.use(passport.session());
 //Routes.
 app.use('/', userRouter);
 app.use('/Request', requestRouter);
+app.use('/Post', postRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
