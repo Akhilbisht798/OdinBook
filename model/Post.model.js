@@ -7,6 +7,7 @@ const Post = new Schema({
     img: {type: String},
     content: {type: String},
     likes: [{type: Schema.Types.ObjectId}],
+    date: {type: Date, default: Date.now},
 });
 
 Post.virtual('TotalLike').get(function () {
