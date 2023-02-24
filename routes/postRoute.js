@@ -20,6 +20,13 @@ router.post('/', (req, res, next) => {
     .catch(err => res.json(err));
 });
 
+router.get('/verify', (req, res, next) => {
+  res.json({
+    user: req.user,
+    success: true
+  });
+})
+
 // Get all User Posts.
 router.get('/', (req, res, next) => {
   PostModel.find({author: req.user._id})
