@@ -1,7 +1,7 @@
 const express = require('express');
 const CommentModel = require('../model/Commet.model');
 const PostModel = require('../model/Post.model');
-const {isAuthenticated} = require('../utils/AuthFunction')
+const {isAuthenticated} = require('../utils/AuthFunction');
 
 const router = express.Router();
 router.use(isAuthenticated);
@@ -35,8 +35,9 @@ router.get('/', (req, res, next) => {
 });
 
 // Get other user Post.
-router.get('/:id', (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   PostModel.find({author: req.params.id})
+    .populate('author')
     .then(data => res.json(data))
     .catch(err => res.json(err));
 });
